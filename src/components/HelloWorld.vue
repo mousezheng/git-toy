@@ -1,24 +1,23 @@
 <template>
   <div>
-    <button v-on:click="init">init</button>
-    <button v-on:click="add">add</button>
-    <button v-on:click="commit">commit</button>
-    <button v-on:click="branch">branch</button>
-    <button v-on:click="branch">branch</button>
-    <button v-on:click="branch">branch</button>
+    <a-button @click="init">init</a-button>
+    <a-button @click="add">add</a-button>
+    <a-button @click="commit">commit</a-button>
     <div id="gitgraph"></div>
   </div>
 </template>
 
 <script>
 import { createGitgraph, TemplateName, templateExtend } from "@gitgraph/js";
+var branchHEAD;
 export default {
   data: function() {
     return {};
   },
   methods: {
-    greet: function() {
-      const graphContainer = document.getElementById("gitgraph");
+    init: function() {
+      var graphContainer = document.getElementById("gitgraph");
+      graphContainer.innerHTML = "";
       var withoutAuthor = templateExtend(TemplateName.Metro, {
         commit: {
           message: {
@@ -30,19 +29,11 @@ export default {
       var gitgraph = createGitgraph(graphContainer, {
         template: withoutAuthor
       });
-      const master = gitgraph.branch("master");
-      master.commit("Init the project");
-      master
-        .commit("Add README")
-        .commit("Add tests")
-        .commit("Implement feature");
-      master.tag("v1.0");
-      const newFeature = gitgraph.branch("new-feature");
-      newFeature.commit("Implement an awesome feature");
-      master.commit("Hotfix a bug");
-      newFeature.commit("Fix tests");
-      // Merge `newFeature` into `master`
-      master.merge(newFeature, "Release new version");
+      branchHEAD = gitgraph.branch("main");
+    },
+    add: function() {},
+    commit: function() {
+      branchHEAD.commit("avvssdd");
     }
   }
 };
