@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>js控制SVG缩放</title>
+</head>
+
+<body>
+    <svg id="svg" style="background-color: #FAFAFA;">
+        <g id="svgPanel">
+            <g id="grid"></g>
+            <defs>
+                <path id="path1" d="M300,200 a1,1 0 0,0 100,0" />
+            </defs>
+            <text x="10" y="100" style="fill:green;">
+                <textPath xlink:href="#path1">啦啦啦啦啦啦啦啦啦啦</textPath>
+            </text>
+        </g>
+    </svg>
+    <button onclick="zoom(1.1)">放1大</button>
+    <button onclick="zoom(0.9)">缩小</button>
+
+    <script type="text/javascript">
+        var svg = document.getElementById('svg');
+        var svgPanel = document.getElementById('svgPanel');
+        var gridSvg = document.getElementById('grid');
+        var width = 800; // 设置svg整体的宽和高
+        var height = 400;
+        var gridLength = 20; // 定义网格的大小
+        svg.setAttribute('width', width);
+        svg.setAttribute('height', height);
+
+        /*
+         * js创建svg元素
+         * @param {String} tag svg的标签名
+         * @param {Object} svg元素的属性
+         */
+        function resetSvg(tag, attrs) {
+            var element = document.createElementNS('http://www.w3.org/2000/svg', tag);
+            for (var g in attrs) {
+                element.setAttribute(g, attrs[g])
+            }
+            return element;
+        }
+        /*
+         * svg缩放
+         * {Float} num 收缩的倍数
+         */
+        var scale = 1;
+
+        function zoom(num) {
+            scale *= num;
+            svgPanel.setAttribute('transform', 'scale(' + scale + ')');
+        }
+        // 绑定鼠标滑轮
+        if (document.addEventListener) {
+            document.addEventListener('DOMMouseScroll', scrollZoom, false);
+        }
+        window.onmousewheel = document.onmousewhell = scrollZoom;
+        /*
+         * 滑轮滚动处理事件，向上滚动放大
+         * {Object} e 事件对象
+         */
+        function scrollZoom(e) {
+            e = e || window.event;
+            // e.detail用来兼容FireFox
+            e.wheelDelta > 0 || e.detail > 0 ? zoom(1.1) : zoom(0.9);
+        }
+    </script>
+</body>
+
+</html>

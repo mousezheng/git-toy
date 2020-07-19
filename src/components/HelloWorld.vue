@@ -1,8 +1,9 @@
 <template>
   <div>
     <a-button @click="init">init</a-button>
-    <a-button @click="add">add</a-button>
-    <a-button @click="commit">commit</a-button>
+    <a-button @click="add" v-if="addDisabled">add</a-button>
+    <a-textarea v-model="commitText" placeholder="Basic usage" :rows="4" />
+    <a-button @click="commit" v-if="commitDisabled">commit</a-button>
     <div id="gitgraph"></div>
   </div>
 </template>
@@ -10,15 +11,31 @@
 <script>
 import { createGitgraph, TemplateName, templateExtend } from "@gitgraph/js";
 var branchHEAD;
+
+function isNotNull(ele) {
+  if (typeof ele === "undefined") {
+    //先判断类型
+    return true;
+  } else if (ele == null) {
+    return true;
+  } else if (ele == "") {
+    return true;
+  }
+  return false;
+}
 export default {
   data: function() {
-    return {};
+    return {
+      commitText: "",
+      addDisabled: false,
+      commitDisabled: false
+    };
   },
   methods: {
     init: function() {
       var graphContainer = document.getElementById("gitgraph");
       graphContainer.innerHTML = "";
-      var withoutAuthor = templateExtend(TemplateName.Metro, {
+      var withoutAuthor = templateExtend(TemplateName.BlackArrow, {
         commit: {
           message: {
             displayHash: false,
@@ -29,11 +46,25 @@ export default {
       var gitgraph = createGitgraph(graphContainer, {
         template: withoutAuthor
       });
-      branchHEAD = gitgraph.branch("main");
+      branchHEAD = gitgraph.branch({
+        name: "main"
+      });
+      this.addDisabled = true;
+      this.commitDisabled = true;
     },
     add: function() {},
     commit: function() {
-      branchHEAD.commit("avvssdd");
+      if (isNotNull(this.commitText)) {
+        this.$message.error(
+          "必须填写提交内容。(commit message must be not null)"
+        );
+        return;
+      }
+      branchHEAD.commit(this.commitText);
+    },
+    zoom: function() {
+      var graphContainer = document.getElementById("gitgraph");
+      graphContainer.setAttribute("transform", "scale(" + 2 + ")");
     }
   }
 };
