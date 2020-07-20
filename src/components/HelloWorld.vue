@@ -1,10 +1,17 @@
 <template>
   <div>
-    <a-button @click="init">init</a-button>
-    <a-button @click="add" v-if="addDisabled">add</a-button>
-    <a-textarea v-model="commitText" placeholder="Basic usage" :rows="4" />
-    <a-button @click="commit" v-if="commitDisabled">commit</a-button>
-    <div id="gitgraph"></div>
+    <a-row>
+      <a-col :span="8">
+        <a-button @click="init">init</a-button>
+        <a-button @click="add" v-if="addDisabled">add</a-button>
+        <a-textarea v-model="commitText" placeholder="Basic usage" :rows="4" />
+        <a-button @click="commit" v-if="commitDisabled">commit</a-button>
+      </a-col>
+      <a-col :span="1"></a-col>
+      <a-col :span="15">
+        <div id="gitgraph"></div>
+      </a-col>
+    </a-row>
   </div>
 </template>
 
@@ -61,6 +68,7 @@ export default {
         return;
       }
       branchHEAD.commit(this.commitText);
+      this.commitText = null;
     },
     zoom: function() {
       var graphContainer = document.getElementById("gitgraph");
