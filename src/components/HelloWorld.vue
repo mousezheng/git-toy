@@ -12,8 +12,7 @@
       <a-col :span="1"></a-col>
       <a-col :span="15">
         <a-select default-value="main" style="width: 120px" @change="checkOut">
-          <a-select-option value="main">main</a-select-option>
-          <a-select-option value="dev">dev</a-select-option>
+          <a-select-option v-for="item in branches" :key="item">{{item}}</a-select-option>
         </a-select>
         <div id="gitgraph"></div>
       </a-col>
@@ -50,7 +49,8 @@ export default {
       commitText: "",
       branchText: "",
       addDisabled: false,
-      commitDisabled: false
+      commitDisabled: false,
+      branches: []
     };
   },
   methods: {
@@ -63,6 +63,7 @@ export default {
       branchHEAD = gitgraph.branch({
         name: "main"
       });
+      this.refreshBranches();
       this.addDisabled = true;
       this.commitDisabled = true;
     },
@@ -83,6 +84,7 @@ export default {
         return;
       }
       branchHEAD = gitgraph.branch(this.branchText);
+      this.refreshBranches();
     },
     zoom: function() {
       var graphContainer = document.getElementById("gitgraph");
@@ -96,6 +98,10 @@ export default {
         return;
       }
       branchHEAD = gitgraph.branch(value);
+    },
+    refreshBranches: function() {
+      this.branches = Array.from(gitgraph._graph.branches.keys());
+      console.log(this.branches);
     }
   }
 };
