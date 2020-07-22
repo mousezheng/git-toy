@@ -2,7 +2,7 @@
   <div>
     <a-row>
       <a-col :span="8">
-        <a-textarea v-model="commitText" placeholder="Basic usage" :rows="4" />
+        <a-textarea v-model="commitText" placeholder="填写 commit message" :rows="4" />
         <a-button @click="init">init</a-button>
         <a-button @click="add" v-if="addDisabled">add</a-button>
         <a-button @click="commit" v-if="commitDisabled">commit</a-button>
